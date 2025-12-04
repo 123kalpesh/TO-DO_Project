@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+
+    <style>
+        /* Global styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f4f6f9;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Input form */
+        .add-task {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .add-task input {
+            padding: 12px;
+            width: 80%;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .add-task button {
+            padding: 12px 18px;
+            border: none;
+            background: #4a90e2;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .add-task button:hover {
+            background: #357ac9;
+        }
+
+        /* Task list */
+        .task {
+            padding: 14px;
+            margin-top: 15px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .task:hover {
+            background: #eef1f7;
+        }
+
+        .task.completed span {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-complete {
+            background: #3cb371;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-complete:hover { background: #2d9d61; }
+        .btn-delete:hover { background: #c0392b; }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>📝 To-Do List</h1>
+
+    <!-- Add Task Form -->
+    <form method="POST" class="add-task">
+        {% csrf_token %}
+        {{ form.title }}
+        <button type="submit">Add</button>
+    </form>
+
+    <!-- List Tasks -->
+    {% for task in tasks %}
+        <div class="task {% if task.completed %} completed {% endif %}">
+            <span>{{ task.title }}</span>
+
+            <div class="actions">
+                <a href="{% url 'complete_task' task.id %}">
+                    <button class="btn-small btn-complete">✔</button>
+                </a>
+
+                <a href="{% url 'delete_task' task.id %}">
+                    <button class="btn-small btn-delete">✖</button>
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <p style="text-align:center; color:gray; margin-top:20px;">
+            No tasks yet. Add your first one!
+        </p>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
